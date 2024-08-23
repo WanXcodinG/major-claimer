@@ -1,39 +1,27 @@
-name: Run Python Bot
+name: Run Python Script Every 5 Minutes
 
-on: 
-  push:
-    branches: [main]
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Menjadwalkan setiap 5 menit
+  workflow_dispatch:  # Memungkinkan Anda untuk menjalankan workflow secara manual jika diperlukan
 
 jobs:
-  run-bot:
+  run-script:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repository
-      id: checkout
-      uses: actions/checkout@v2
-
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
     - name: Set up Python
-      id: setup-python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.11.0'
-
+        python-version: '3.11.0'  # Ganti dengan versi Python yang Anda butuhkan
+      
     - name: Install dependencies
-      id: install-deps
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Run bot script
-      id: run-bot
+        pip install -r requirements.txt  # Pastikan Anda memiliki file requirements.txt jika ada
+        
+    - name: Run bot.py
       run: |
         python bot.py
-
-    - name: Post setup-python
-      if: success()
-      run: echo "Python setup and checkout completed successfully."
-
-    - name: Post checkout repository
-      if: success()
-      run: echo "Repository checked out successfully."
